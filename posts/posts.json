@@ -5,7 +5,7 @@
     "url": "posts/q2-workshop.html",
     "excerpt": "A collection of materials (supplementary and otherwise) for the QIIME2 2025 workshop hosted by the Metcalf Lab at Colorado State University.",
     "tags": ["workshop", "qiime2", "tutorial"],
-    "image": "../assets/images/q2sq.png"
+    "image": "assets/images/q2sq.png"
   },
   {
     "title": "Survey of Urban Filth Flies in FOCO",
@@ -14,6 +14,6 @@
     "excerpt": "A home science project qualitatively testing the efficacy of fly traps and identifying local flies attracted to trash and carrion to characterize the population around Colorado State University's main campus in Fort Collins, CO.",
     "tags": ["research", "entomology", "ecology", "home science"],
     "pinned": true,
-    "image": "../assets/images/data-fly.png"
+    "image": "assets/images/data-fly.png"
   }
 ]
