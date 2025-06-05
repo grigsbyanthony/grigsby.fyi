@@ -1,19 +1,19 @@
 [
   {
-    "title": "Sample Post 2",
-    "date": "2025-05-25",
-    "url": "posts/sample-post-2.html",
-    "excerpt": "Another sample post with different tags to show how filtering works.",
-    "tags": ["academic", "sample"],
-    "image": "../assets/images/dissertation-fly.png"
+    "title": "2025 QIIME2 Workshop",
+    "date": "2025-05-30",
+    "url": "posts/q2-workshop.html",
+    "excerpt": "A collection of materials (supplementary and otherwise) for the QIIME2 2025 workshop hosted by the Metcalf Lab at Colorado State University.",
+    "tags": ["workshop", "qiime2", "tutorial"],
+    "image": "../assets/images/q2sq.png"
   },
   {
     "title": "Survey of Urban Filth Flies in FOCO",
-    "date": "2025-05-31",
+    "date": "2025-05-30",
     "url": "posts/foco-flies.html",
     "excerpt": "A home science project qualitatively testing the efficacy of fly traps and identifying local flies attracted to trash and carrion to characterize the population around Colorado State University's main campus in Fort Collins, CO.",
-    "tags": ["research", "entomology", "urban ecology", "home science"],
+    "tags": ["research", "entomology", "ecology", "home science"],
     "pinned": true,
-    "image": "../assets/images/dissertation-fly.png"
+    "image": "../assets/images/data-fly.png"
   }
 ]
