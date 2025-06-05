@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>grigsby.fyi | Academic & Research Blog</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="assets/images/favicons/site.webmanifest">
+    <link rel="shortcut icon" href="assets/images/favicons/favicon.ico">
+</head>
+<body>
+    <div class="container centered-container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <img src="assets/images/dissertation-fly.png" alt="Dissertation Fly" class="logo-image">
+                </div>
+                <div class="header-text">
+                    <h1>grigsby.fyi</h1>
+                    <div class="subtitle">
+                        Microbial ecology, bioinformatics, entomology, and whatever else I stumble into. Occassional posts about any of them.
+                    </div>
+                    <div class="author">By Anthony Grigsby</div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <nav class="main-nav">
+                <ul>
+                    <li class="active"><a href="#" id="posts-tab">Posts</a></li>
+                    <li><a href="#" id="repos-tab">Repositories</a></li>
+                    <li><a href="#" id="resources-tab">Resources</a></li>
+                    <li><a href="#" id="publications-tab">Publications</a></li>
+                    <li><a href="#" id="presentations-tab">Presentations</a></li>
+                </ul>
+            </nav>
+
+            <div id="posts-content" class="tab-content active">
+                <section class="search-section">
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="Search by tag...">
+                        <button id="search-button"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div id="tags-container" class="tags"></div>
+                </section>
+                
+                <section class="pinned-posts">
+                    <div id="pinned-posts-container"></div>
+                </section>
+
+                <section class="posts">
+                    <div class="posts-header">
+                        <h2>Posts</h2>
+                        <div class="sort-options">
+                            <button id="sort-by-date" class="sort-button active">Sort by Date</button>
+                            <button id="sort-by-title" class="sort-button">Sort by Title</button>
+                        </div>
+                    </div>
+                    <div id="posts-container" class="posts-list"></div>
+                </section>
+            </div>
+            
+            <div id="repos-content" class="tab-content">
+                <div id="repos-container">
+                    <p class="loading-repos">Loading repositories...</p>
+                </div>
+            </div>
+            
+            <div id="resources-content" class="tab-content">
+                <section class="resources">
+                    <div class="resource-filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="microbiology">
+                            <img src="assets/images/bacterium-solid.svg" alt="Microbiology" class="filter-icon"> Microbiology
+                        </button>
+                        <button class="filter-btn" data-filter="programming">
+                            <img src="assets/images/code-solid.svg" alt="Programming" class="filter-icon"> Programming
+                        </button>
+                        <button class="filter-btn" data-filter="data-analysis">
+                            <img src="assets/images/database-solid.svg" alt="Data Analysis" class="filter-icon"> Data Analysis
+                        </button>
+                        <button class="filter-btn" data-filter="entomology">
+                            <img src="assets/images/bug-solid.svg" alt="Entomology" class="filter-icon"> Entomology
+                        </button>
+                    </div>
+                    <div class="bookshelf-container">
+                        <div class="bookshelf">
+                            <!-- Books will be dynamically added here -->
+                            <div class="book" data-category="microbiology">
+                                <div class="book-top">
+                                    <img src="assets/images/bacterium-solid.svg" alt="Microbiology" class="book-icon">
+                                </div>
+                                <div class="book-spine">
+                                    <h3>QIIME2 Documentation</h3>
+                                    <p>Comprehensive guide to microbiome analysis</p>
+                                </div>
+                                <a href="https://docs.qiime2.org" target="_blank" class="book-link"></a>
+                            </div>
+                            
+                            <div class="book" data-category="programming">
+                                <div class="book-top">
+                                    <img src="assets/images/code-solid.svg" alt="Programming" class="book-icon">
+                                </div>
+                                <div class="book-spine">
+                                    <h3>Python for Data Science</h3>
+                                    <p>Essential Python libraries and techniques</p>
+                                </div>
+                                <a href="https://python-data-science.readthedocs.io" target="_blank" class="book-link"></a>
+                            </div>
+                            
+                            <div class="book" data-category="data-analysis">
+                                <div class="book-top">
+                                    <img src="assets/images/database-solid.svg" alt="Data Analysis" class="book-icon">
+                                </div>
+                                <div class="book-spine">
+                                    <h3>SQL for Biologists</h3>
+                                    <p>Database management for biological data</p>
+                                </div>
+                                <a href="https://github.com/topics/bioinformatics-database" target="_blank" class="book-link"></a>
+                            </div>
+                            
+                            <div class="book" data-category="entomology">
+                                <div class="book-top">
+                                    <img src="assets/images/bug-solid.svg" alt="Entomology" class="book-icon">
+                                </div>
+                                <div class="book-spine">
+                                    <h3>Insect Identification</h3>
+                                    <p>Guide to identifying common insects</p>
+                                </div>
+                                <a href="https://www.insectidentification.org" target="_blank" class="book-link"></a>
+                            </div>
+                            
+                            <!-- New resources -->
+                            <div class="book" data-category="data-analysis">
+                                <div class="book-top">
+                                    <img src="assets/images/database-solid.svg" alt="Data Analysis" class="book-icon">
+                                </div>
+                                <div class="book-spine">
+                                    <h3>Quarto Books</h3>
+                                    <p>Guide to creating books with Quarto</p>
+                                </div>
+                                <a href="https://blog.stephenturner.us/p/quarto-books" target="_blank" class="book-link"></a>
+                            </div>
+                            
+                            <div class="book" data-category="data-analysis">
+                                <div class="book-top">
+                                    <img src="assets/images/database-solid.svg" alt="Data Analysis" class="book-icon">
+                                </div>
+                                <div class="book-spine">
+                                    <h3>Bluesky for Science</h3>
+                                    <p>Using Bluesky for scientific communication</p>
+                                </div>
+                                <a href="https://blog.stephenturner.us/p/bluesky-for-science" target="_blank" class="book-link"></a>
+                            </div>
+                            
+                            <div class="book" data-category="programming">
+                                <div class="book-top">
+                                    <img src="assets/images/code-solid.svg" alt="Programming" class="book-icon">
+                                </div>
+                                <div class="book-spine">
+                                    <h3>Python for R Users</h3>
+                                    <p>Transitioning from R to Python for data analysis</p>
+                                </div>
+                                <a href="https://blog.stephenturner.us/p/python-for-r-users" target="_blank" class="book-link"></a>
+                            </div>
+                            
+                            <div class="book" data-category="entomology">
+                                <div class="book-top">
+                                    <img src="assets/images/bug-solid.svg" alt="Entomology" class="book-icon">
+                                </div>
+                                <div class="book-spine">
+                                    <h3>Canadian Journal of Arthropod Identification</h3>
+                                    <p>Taxonomic resources for arthropod identification</p>
+                                </div>
+                                <a href="https://cjai.biologicalsurvey.ca/articles/jwm-39/" target="_blank" class="book-link"></a>
+                            </div>
+                            
+                            <div class="book" data-category="entomology">
+                                <div class="book-top">
+                                    <img src="assets/images/bug-solid.svg" alt="Entomology" class="book-icon">
+                                </div>
+                                <div class="book-spine">
+                                    <h3>Bird Blowfly Keys</h3>
+                                    <p>Identification keys for bird blowflies</p>
+                                </div>
+                                <a href="https://www.birdblowfly.com/images/Publications/Keys.pdf" target="_blank" class="book-link"></a>
+                            </div>
+                            
+                            <div class="book" data-category="entomology">
+                                <div class="book-top">
+                                    <img src="assets/images/bug-solid.svg" alt="Entomology" class="book-icon">
+                                </div>
+                                <div class="book-spine">
+                                    <h3>Forensic Fly Key</h3>
+                                    <p>Identification key for forensically important flies</p>
+                                </div>
+                                <a href="https://websites.nku.edu/~dahlem/ForensicFlyKey/species.htm" target="_blank" class="book-link"></a>
+                            </div>
+                            
+                            <div class="book" data-category="entomology">
+                                <div class="book-top">
+                                    <img src="assets/images/bug-solid.svg" alt="Entomology" class="book-icon">
+                                </div>
+                                <div class="book-spine">
+                                    <h3>Blow Flies Guide</h3>
+                                    <p>Comprehensive guide to blow flies</p>
+                                </div>
+                                <a href="https://www.fscbiodiversity.uk/blog/blow-flies-part-1" target="_blank" class="book-link"></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div id="publications-content" class="tab-content">
+                <section class="publications">
+                    <div id="publications-container" class="publications-list">
+                        <div class="publication-card">
+                            <h3><a href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XaCgNQ4AAAAJ&citation_for_view=XaCgNQ4AAAAJ:u5HHmVD_uO8C" target="_blank">Seasonal Dynamics of Decomposition Ecology</a></h3>
+                            <div class="publication-meta">
+                                <span class="publication-authors">A Grigsby</span>
+                                <span class="publication-journal">ProQuest, 2024</span>
+                            </div>
+                            <p class="publication-abstract">A master's thesis discussing the microbial ecology and entomology of carrion decomposition.</p>
+                        </div>
+                        
+                        <div class="publication-card">
+                            <h3><a href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XaCgNQ4AAAAJ&citation_for_view=XaCgNQ4AAAAJ:u-x6o8ySG0sC" target="_blank">The effect of Edhazardia aedis infection on the composition of Aedes aegypti microbiota</a></h3>
+                            <div class="publication-meta">
+                                <span class="publication-authors">A Grigsby</span>
+                                <span class="publication-journal">Knowledge Bank @ OSU, 2022</span>
+                            </div>
+                            <p class="publication-abstract">This paper presents preliminary results from a thesis study investigating the influence of <i>Edhazardia aedis</i> infection on the composition of <i>Aedes aegypti</i> microbiota.</p>
+                        </div>
+                        
+                        <div class="publication-card">
+                            <h3><a href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=XaCgNQ4AAAAJ&citation_for_view=XaCgNQ4AAAAJ:d1gkVwhDpl0C" target="_blank">Propagation of the microsporidian parasite <i>Edhazardia aedis</i> in <i>Aedes aegypti</i> mosquitoes</a></h3>
+                            <div class="publication-meta">
+                                <span class="publication-authors">A Grigsby, B J Kelly, N D Sanscainte, J J Becnel, S M Short</span>
+                                <span class="publication-journal">Journal of Visualized Experiments, 2020</span>
+                            </div>
+                            <p class="publication-abstract">This methods paper presents researchers with a means of propagating <i>Edhazardia aedis</i> in <i>Aedes aegypti</i> mosquitoes.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div id="presentations-content" class="tab-content">
+                <section class="presentations">
+                    <div id="presentations-container" class="presentations-list">
+                        <div class="presentation-card">
+                            <h3>Developmental and Environmental Drivers of Phormia regina microbiome dynamics</h3>
+                            <div class="presentation-meta">
+                                <span class="presentation-venue">Front Range Microbiome Symposium 2025</span>
+                                <span class="presentation-date">2025</span>
+                            </div>
+                            <p class="presentation-authors">Anthony Grigsby*, M. Eric Benbow, PhD, Jennifer L. Pechal, PhD</p>
+                        </div>
+                        
+                        <div class="presentation-card">
+                            <h3>Disease Ecology of Buruli ulcer: Aquatic Community Associations of Mycobacterium ulcerans and other Mycolactone Producing Mycobacteria in the Southern USA and French Guiana</h3>
+                            <div class="presentation-meta">
+                                <span class="presentation-venue">Ecological Society of America 2023</span>
+                                <span class="presentation-date">2023</span>
+                            </div>
+                            <p class="presentation-authors">M. Eric Benbow, PhD*, Jennifer Pechal, PhD, Sophie Picq, Magdalene Dogbe, Alex Rakestraw, Kayla Fast, Matthew Scott, Joseph Receuver, Alexandra Bauer, Kelly Waters, Anthony Grigsby, Christine Chevillon, Michael Sandel, Heather Jordan, Jean-François Guégan</p>
+                        </div>
+                        
+                        <div class="presentation-card">
+                            <h3>Advanced Degree Reflection</h3>
+                            <div class="presentation-meta">
+                                <span class="presentation-venue">GRAM Speed Presentations 2024</span>
+                                <span class="presentation-date">2024</span>
+                            </div>
+                            <p class="presentation-authors">Anthony Grigsby*</p>
+                        </div>
+                        
+                        <div class="presentation-card">
+                            <h3>Understanding Seasonal Differences in Postmortem Microbiome Development for Forensic Practice</h3>
+                            <div class="presentation-meta">
+                                <span class="presentation-venue">American Academy of Forensic Science 2024</span>
+                                <span class="presentation-date">2024</span>
+                            </div>
+                            <p class="presentation-authors">Anthony Grigsby*, M. Eric Benbow, PhD, Jennifer L. Pechal, PhD, Kelly Waters, Bethany Mikles</p>
+                        </div>
+                        
+                        <div class="presentation-card">
+                            <h3>Blowfly Larvae, Larval Masses, and Microbiomes: Improving on a Classic</h3>
+                            <div class="presentation-meta">
+                                <span class="presentation-venue">Applied Microbiology International 2023</span>
+                                <span class="presentation-date">2023</span>
+                            </div>
+                            <p class="presentation-authors">Anthony Grigsby*</p>
+                        </div>
+                        
+                        <div class="presentation-card">
+                            <h3>Calliphoridae Larval Mass Development During Carrion Decomposition</h3>
+                            <div class="presentation-meta">
+                                <span class="presentation-venue">Entomology Society of America 2023</span>
+                                <span class="presentation-date">2023</span>
+                            </div>
+                            <p class="presentation-authors">Anthony Grigsby*, M. Eric Benbow, PhD, Jennifer L. Pechal, PhD, Kelly Waters, Bethany Mikles</p>
+                        </div>
+                        
+                        <div class="presentation-card">
+                            <h3>Seasonal Soil Microbial Succession During Carrion Decomposition: Applications for Body Translocation and Postmortem Interval Estimation</h3>
+                            <div class="presentation-meta">
+                                <span class="presentation-venue">American Academy of Forensic Science 2024</span>
+                                <span class="presentation-date">2024</span>
+                            </div>
+                            <p class="presentation-authors">Kelly Waters*, M. Eric Benbow, PhD, Jennifer L. Pechal, PhD, Anthony Grigsby, Bethany Mikles</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; <span id="current-year"></span> grigsby.fyi. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

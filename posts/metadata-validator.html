@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QIIME2 Metadata File Validator | QIIME2 2025 Workshop</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="../assets/images/favicons/site.webmanifest">
+    <link rel="shortcut icon" href="../assets/images/favicons/favicon.ico">
+    <style>
+        /* Import custom fonts from parent directory */
+        @font-face {
+            font-family: 'Computer Modern Serif';
+            src: url('../assets/fonts/cmunsi.ttf') format('truetype');
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Serif';
+            src: url('../assets/fonts/cmunso.ttf') format('truetype');
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Sans';
+            src: url('../assets/fonts/cmunss.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Sans';
+            src: url('../assets/fonts/cmunsx.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+        
+        :root {
+            --primary-color: #333333;
+            --secondary-color: #555555;
+            --accent-color: #777777;
+            --text-color: #333333;
+            --serif-font: 'Computer Modern Serif', Georgia, serif;
+            --sans-font: 'Computer Modern Sans', Arial, sans-serif;
+        }
+        
+        body {
+            font-family: var(--sans-font);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+        }
+        
+        .post-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .post-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-family: var(--sans-font);
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .post-meta {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .post-tag {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        
+        .post-content {
+            font-family: var(--sans-font);
+        }
+        
+        .home-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        
+        .home-link a {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+        
+        .home-link a:hover {
+            background-color: #e0e0e0;
+        }
+        
+        /* Validator specific styles */
+        .validator-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .file-upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 6px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+        
+        .file-upload-area.highlight {
+            border-color: #5bc0de;
+            background-color: #f0f7fb;
+        }
+        
+        .file-upload-area p {
+            margin-bottom: 15px;
+            color: #666;
+        }
+        
+        .file-upload-btn {
+            background-color: #5bc0de;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        
+        .file-upload-btn:hover {
+            background-color: #46b8da;
+        }
+        
+        .validation-results {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .validation-results h3 {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .result-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .result-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        
+        .result-warning {
+            background-color: #fcf8e3;
+            color: #8a6d3b;
+        }
+        
+        .result-error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        
+        .metadata-preview {
+            margin-top: 20px;
+            overflow-x: auto;
+            display: none;
+        }
+        
+        .metadata-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        
+        .metadata-table th, .metadata-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .metadata-table th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        
+        .metadata-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .info-callout {
+            background-color: #f0f7fb;
+            border-left: 5px solid #5bc0de;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 3px;
+        }
+        
+        .requirements-list {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .requirements-list h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="home-link">
+        <a href="q2-workshop.html">← Back to Workshop</a>
+    </div>
+    <div class="post-container">
+        <header class="post-header">
+            <h1 class="post-title">QIIME2 Metadata File Validator</h1>
+            <div class="post-meta">June 2, 2025</div>
+            <div class="post-tags">
+                <span class="post-tag">metadata</span>
+                <span class="post-tag">validation</span>
+                <span class="post-tag">tool</span>
+            </div>
+        </header>
+        
+        <div class="post-content">
+            <div class="info-callout">
+                <p><strong>QIIME2 Metadata Validator Tool</strong> - This tool helps you validate your metadata files for use with QIIME2. Upload your TSV file to check if it meets QIIME2's formatting requirements.</p>
+            </div>
+            
+            <h2>Metadata Requirements</h2>
+            <div class="requirements-list">
+                <h3>QIIME2 Metadata Requirements:</h3>
+                <ul>
+                    <li>File must be tab-separated (TSV format)</li>
+                    <li>First row must contain column headers</li>
+                    <li>First column must contain sample IDs</li>
+                    <li>Sample IDs must be unique</li>
+                    <li>Column headers must not contain spaces or special characters (except underscore)</li>
+                    <li>No empty cells in the ID column</li>
+                    <li>No duplicate columns</li>
+                </ul>
+            </div>
+            
+            <h2>Example Metadata Table</h2>
+            <p>Here's an example of a properly formatted QIIME2 metadata file:</p>
+            
+            <div class="example-table-container" style="overflow-x: auto; margin-bottom: 30px;">
+                <table class="metadata-table">
+                    <thead>
+                        <tr>
+                            <th>sample_id</th>
+                            <th>subject_id</th>
+                            <th>body_site</th>
+                            <th>days_post_antibiotic</th>
+                            <th>treatment</th>
+                        </tr>
+                        <tr>
+                            <th>#q2:types</th>
+                            <th>categorical</th>
+                            <th>categorical</th>
+                            <th>numeric</th>
+                            <th>categorical</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>sample1</td>
+                            <td>subject1</td>
+                            <td>gut</td>
+                            <td>10</td>
+                            <td>control</td>
+                        </tr>
+                        <tr>
+                            <td>sample2</td>
+                            <td>subject1</td>
+                            <td>skin</td>
+                            <td>10</td>
+                            <td>control</td>
+                        </tr>
+                        <tr>
+                            <td>sample3</td>
+                            <td>subject2</td>
+                            <td>gut</td>
+                            <td>10</td>
+                            <td>antibiotic</td>
+                        </tr>
+                        <tr>
+                            <td>sample4</td>
+                            <td>subject2</td>
+                            <td>skin</td>
+                            <td>10</td>
+                            <td>antibiotic</td>
+                        </tr>
+                        <tr>
+                            <td>sample5</td>
+                            <td>subject3</td>
+                            <td>gut</td>
+                            <td>10</td>
+                            <td>probiotic</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="info-callout">
+                <p><strong>Download Example:</strong> You can use this example as a template for your own metadata. Make sure to save it as a tab-separated (.tsv) file.</p>
+                <p><button id="downloadExample" class="file-upload-btn" style="margin-top: 10px;">Download Example TSV</button></p>
+            </div>
+            
+            <div class="validator-container">
+                <h2>Upload Your Metadata File</h2>
+                <div class="file-upload-area" id="drop-area">
+                    <p>Drag and drop your TSV file here</p>
+                    <p>OR</p>
+                    <input type="file" id="fileInput" accept=".tsv,.txt" style="display: none;">
+                    <button class="file-upload-btn" id="fileSelectBtn">Select File</button>
+                </div>
+                
+                <div class="validation-results" id="validationResults">
+                    <h3>Validation Results</h3>
+                    <div id="resultsList"></div>
+                </div>
+                
+                <div class="metadata-preview" id="metadataPreview">
+                    <h3>Metadata Preview</h3>
+                    <div id="tableContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropArea = document.getElementById('drop-area');
+            const fileInput = document.getElementById('fileInput');
+            const fileSelectBtn = document.getElementById('fileSelectBtn');
+            const validationResults = document.getElementById('validationResults');
+            const resultsList = document.getElementById('resultsList');
+            const metadataPreview = document.getElementById('metadataPreview');
+            const tableContainer = document.getElementById('tableContainer');
+            const downloadExampleBtn = document.getElementById('downloadExample');
+            
+            // Handle file selection button click
+            fileSelectBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Handle file input change
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    handleFile(this.files[0]);
+                }
+            });
+            
+            // Handle drag and drop events
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.classList.add('highlight');
+            }
+            
+            function unhighlight() {
+                dropArea.classList.remove('highlight');
+            }
+            
+            // Handle dropped files
+            dropArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                if (files && files[0]) {
+                    handleFile(files[0]);
+                }
+            });
+            
+            // Process the uploaded file
+            function handleFile(file) {
+                // Check if file is a TSV or TXT file
+                if (!file.name.endsWith('.tsv') && !file.name.endsWith('.txt')) {
+                    showError('Please upload a .tsv or .txt file');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const content = e.target.result;
+                    validateMetadata(content);
+                };
+                
+                reader.onerror = function() {
+                    showError('Error reading file');
+                };
+                
+                reader.readAsText(file);
+            }
+            
+            // Validate the metadata file
+            function validateMetadata(content) {
+                // Clear previous results
+                resultsList.innerHTML = '';
+                tableContainer.innerHTML = '';
+                
+                // Split content into lines
+                const lines = content.split('\n').filter(line => line.trim() !== '');
+                
+                if (lines.length < 2) {
+                    showError('File must contain at least two lines (header and data)');
+                    return;
+                }
+                
+                // Split header and check for tabs
+                const headerLine = lines[0];
+                const headers = headerLine.split('\t');
+                
+                if (headers.length < 2) {
+                    showError('File must be tab-separated and contain at least two columns');
+                    return;
+                }
+                
+                // Initialize validation results
+                const results = [];
+                let hasErrors = false;
+                
+                // Check header format
+                const idColumnName = headers[0].trim();
+                if (!idColumnName) {
+                    results.push({ type: 'error', message: 'First column header cannot be empty' });
+                    hasErrors = true;
+                }
+                
+                // Check for spaces and special characters in headers
+                const invalidHeaders = headers.filter(header => {
+                    const trimmed = header.trim();
+                    return trimmed && !/^[a-zA-Z0-9_]+$/.test(trimmed);
+                });
+                
+                if (invalidHeaders.length > 0) {
+                    results.push({
+                        type: 'error',
+                        message: `Column headers contain spaces or special characters: ${invalidHeaders.join(', ')}`
+                    });
+                    hasErrors = true;
+                }
+                
+                // Check for duplicate headers
+                const uniqueHeaders = new Set(headers.map(h => h.trim()).filter(h => h));
+                if (uniqueHeaders.size < headers.filter(h => h.trim()).length) {
+                    results.push({ type: 'error', message: 'Duplicate column headers found' });
+                    hasErrors = true;
+                }
+                
+                // Check for #q2:types row
+                let typesRowIndex = -1;
+                let hasTypesRow = false;
+                let typesValid = true;
+                let invalidTypes = [];
+                
+                // Look for the #q2:types row
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].startsWith('#q2:types')) {
+                        hasTypesRow = true;
+                        typesRowIndex = i;
+                        
+                        // Validate the types
+                        const typesRow = lines[i].split('\t');
+                        
+                        // Check if types row has the same number of columns as header
+                        if (typesRow.length !== headers.length) {
+                            results.push({
+                                type: 'error',
+                                message: 'The #q2:types row must have the same number of columns as the header row'
+                            });
+                            hasErrors = true;
+                            typesValid = false;
+                        } else {
+                            // Check that all types are either 'categorical' or 'numeric'
+                            for (let j = 1; j < typesRow.length; j++) {
+                                const type = typesRow[j].trim().toLowerCase();
+                                if (type !== 'categorical' && type !== 'numeric') {
+                                    invalidTypes.push(`Column ${j+1} (${headers[j]}): '${typesRow[j]}'`);
+                                }
+                            }
+                            
+                            if (invalidTypes.length > 0) {
+                                results.push({
+                                    type: 'error',
+                                    message: `Invalid types in #q2:types row. Types must be 'categorical' or 'numeric'. Invalid types: ${invalidTypes.join(', ')}`
+                                });
+                                hasErrors = true;
+                                typesValid = false;
+                            } else {
+                                results.push({
+                                    type: 'success',
+                                    message: 'The #q2:types row is properly formatted'
+                                });
+                            }
+                        }
+                        
+                        break;
+                    }
+                }
+                
+                if (!hasTypesRow) {
+                    results.push({
+                        type: 'warning',
+                        message: "No #q2:types row found. While not required, it's recommended to specify column types for QIIME2 analysis."
+                    });
+                }
+                
+                // Check sample IDs (skip the #q2:types row if present)
+                const sampleIds = [];
+                const emptyIdRows = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    // Skip the #q2:types row when checking sample IDs
+                    if (i === typesRowIndex) continue;
+                    
+                    const columns = lines[i].split('\t');
+                    const sampleId = columns[0].trim();
+                    
+                    if (!sampleId) {
+                        emptyIdRows.push(i + 1);
+                        continue;
+                    }
+                    
+                    sampleIds.push(sampleId);
+                }
+                
+                if (emptyIdRows.length > 0) {
+                    results.push({
+                        type: 'error',
+                        message: `Empty sample IDs found in rows: ${emptyIdRows.join(', ')}`
+                    });
+                    hasErrors = true;
+                }
+                
+                // Check for duplicate sample IDs
+                const uniqueIds = new Set(sampleIds);
+                if (uniqueIds.size < sampleIds.length) {
+                    const duplicates = findDuplicates(sampleIds);
+                    results.push({
+                        type: 'error',
+                        message: `Duplicate sample IDs found: ${duplicates.join(', ')}`
+                    });
+                    hasErrors = true;
+                }
+                
+                // Check for consistent number of columns
+                const columnCounts = lines.map(line => line.split('\t').length);
+                const inconsistentRows = [];
+                
+                for (let i = 1; i < columnCounts.length; i++) {
+                    if (columnCounts[i] !== columnCounts[0]) {
+                        inconsistentRows.push(i + 1);
+                    }
+                }
+                
+                if (inconsistentRows.length > 0) {
+                    results.push({
+                        type: 'warning',
+                        message: `Inconsistent number of columns in rows: ${inconsistentRows.join(', ')}`
+                    });
+                }
+                
+                // Add overall success message if no errors
+                if (results.filter(r => r.type === 'error').length === 0) {
+                    if (results.filter(r => r.type === 'warning').length === 0) {
+                        results.push({ type: 'success', message: 'Metadata file is valid for use with QIIME2!' });
+                    } else {
+                        results.push({ type: 'success', message: 'Metadata file is valid, but has some warnings to review.' });
+                    }
+                }
+                
+                // Display results
+                displayResults(results);
+                
+                // Generate preview table
+                generatePreviewTable(lines);
+            }
+            
+            // Find duplicate values in an array
+            function findDuplicates(arr) {
+                const seen = {};
+                const duplicates = [];
+                
+                arr.forEach(item => {
+                    if (seen[item]) {
+                        if (seen[item] === 1) {
+                            duplicates.push(item);
+                        }
+                        seen[item]++;
+                    } else {
+                        seen[item] = 1;
+                    }
+                });
+                
+                return duplicates;
+            }
+            
+            // Display validation results
+            function displayResults(results) {
+                validationResults.style.display = 'block';
+                
+                results.forEach(result => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = `result-item result-${result.type}`;
+                    resultItem.textContent = result.message;
+                    resultsList.appendChild(resultItem);
+                });
+            }
+            
+            // Generate preview table
+            function generatePreviewTable(lines) {
+                if (lines.length < 2) return;
+                
+                metadataPreview.style.display = 'block';
+                
+                const table = document.createElement('table');
+                table.className = 'metadata-table';
+                
+                // Create header row
+                const thead = document.createElement('thead');
+                const headerRow = document.createElement('tr');
+                const headers = lines[0].split('\t');
+                
+                headers.forEach(header => {
+                    const th = document.createElement('th');
+                    th.textContent = header;
+                    headerRow.appendChild(th);
+                });
+                
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+                
+                // Create data rows (limit to first 10 rows for performance)
+                const tbody = document.createElement('tbody');
+                const maxRows = Math.min(lines.length, 11);
+                
+                for (let i = 1; i < maxRows; i++) {
+                    const row = document.createElement('tr');
+                    const columns = lines[i].split('\t');
+                    
+                    columns.forEach((column, index) => {
+                        const td = document.createElement('td');
+                        td.textContent = column;
+                        row.appendChild(td);
+                    });
+                    
+                    tbody.appendChild(row);
+                }
+                
+                table.appendChild(tbody);
+                tableContainer.appendChild(table);
+                
+                // Add note if showing limited rows
+                if (lines.length > 11) {
+                    const note = document.createElement('p');
+                    note.textContent = `Showing first 10 of ${lines.length - 1} data rows`;
+                    note.style.fontStyle = 'italic';
+                    note.style.color = '#666';
+                    note.style.marginTop = '10px';
+                    tableContainer.appendChild(note);
+                }
+            }
+            
+            // Show error message
+            function showError(message) {
+                validationResults.style.display = 'block';
+                resultsList.innerHTML = '';
+                
+                const errorItem = document.createElement('div');
+                errorItem.className = 'result-item result-error';
+                errorItem.textContent = message;
+                resultsList.appendChild(errorItem);
+            }
+            
+            // Handle example download button
+            downloadExampleBtn.addEventListener('click', function() {
+                // Create example metadata content
+                const exampleContent = 'sample_id\tsubject_id\tbody_site\tdays_post_antibiotic\ttreatment\n' +
+                    '#q2:types\tcategorical\tcategorical\tnumeric\tcategorical\n' +
+                    'sample1\tsubject1\tgut\t10\tcontrol\n' +
+                    'sample2\tsubject1\tskin\t10\tcontrol\n' +
+                    'sample3\tsubject2\tgut\t10\tantibiotic\n' +
+                    'sample4\tsubject2\tskin\t10\tantibiotic\n' +
+                    'sample5\tsubject3\tgut\t10\tprobiotic';
+                
+                // Create blob and download link
+                const blob = new Blob([exampleContent], { type: 'text/tab-separated-values' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'qiime2_example_metadata.tsv';
+                document.body.appendChild(a);
+                a.click();
+                
+                // Clean up
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to RMarkdown | QIIME2 2025 Workshop</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Import custom fonts from parent directory */
+        @font-face {
+            font-family: 'Computer Modern Serif';
+            src: url('../assets/fonts/cmunsi.ttf') format('truetype');
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Serif';
+            src: url('../assets/fonts/cmunso.ttf') format('truetype');
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Sans';
+            src: url('../assets/fonts/cmunss.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Sans';
+            src: url('../assets/fonts/cmunsx.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+        
+        :root {
+            --primary-color: #333333;
+            --secondary-color: #555555;
+            --accent-color: #777777;
+            --text-color: #333333;
+            --serif-font: 'Computer Modern Serif', Georgia, serif;
+            --sans-font: 'Computer Modern Sans', Arial, sans-serif;
+        }
+        
+        body {
+            font-family: var(--sans-font);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+        }
+        
+        .post-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .post-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-family: var(--sans-font);
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .post-meta {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .post-tag {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        
+        .post-content {
+            font-family: var(--sans-font);
+        }
+        
+        .post-content h2 {
+            font-family: var(--sans-font);
+            color: var(--primary-color);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .post-content h3 {
+            font-family: var(--sans-font);
+            color: var(--primary-color);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+        
+        .post-content a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        
+        .post-content a:hover {
+            text-decoration: underline;
+        }
+        
+        .post-content pre {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            padding: 16px;
+            overflow: auto;
+            font-family: monospace;
+            margin-bottom: 20px;
+        }
+        
+        .post-content code {
+            font-family: monospace;
+            background-color: #f6f8fa;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        .post-content pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        
+        .post-content ul, .post-content ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+        
+        .post-content li {
+            margin-bottom: 8px;
+        }
+        
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 30px auto;
+            border-radius: 8px;
+        }
+        
+        .post-content blockquote {
+            border-left: 4px solid #dfe2e5;
+            padding-left: 16px;
+            color: #6a737d;
+            margin: 0 0 20px;
+        }
+        
+        .home-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        
+        .home-link a {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+        
+        .home-link a:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .code-block {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            background-color: transparent;
+        }
+        
+        .info-callout {
+            background-color: #f0f7fb;
+            border-left: 5px solid #5bc0de;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 3px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .callout-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        
+        .callout-content {
+            flex: 1;
+        }
+        
+        .image-caption {
+            text-align: center;
+            color: #6a737d;
+            font-size: 0.9rem;
+            margin-top: -20px;
+            margin-bottom: 30px;
+        }
+        
+        .syntax-highlight {
+            color: #d73a49;
+            font-weight: bold;
+        }
+        
+        .syntax-comment {
+            color: #6a737d;
+            font-style: italic;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dfe2e5;
+        }
+        
+        th {
+            background-color: #f6f8fa;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="home-link">
+        <a href="q2-workshop.html">← Back to Workshop</a>
+    </div>
+    <div class="post-container">
+        <header class="post-header">
+            <h1 class="post-title">Introduction to RMarkdown</h1>
+            <div class="post-meta">June 2, 2025</div>
+            <div class="post-tags">
+                <span class="post-tag">documentation</span>
+                <span class="post-tag">R</span>
+                <span class="post-tag">reproducibility</span>
+            </div>
+        </header>
+        
+        <div class="post-content">
+            <div class="info-callout">
+                <div class="callout-icon">ℹ️</div>
+                <div class="callout-content">
+                    <strong>Workshop Material:</strong> This document is part of the QIIME2 2025 Workshop. It provides an introduction to RMarkdown for scientific documentation and presentation with a focus on microbiome analysis workflows.
+                </div>
+            </div>
+            
+            <section>
+                <h2>What is RMarkdown?</h2>
+                <p>RMarkdown is a file format for making dynamic documents with R. It combines the core syntax of <a href="https://daringfireball.net/projects/markdown/" target="_blank">Markdown</a> with embedded R code chunks that can be executed to produce outputs directly in your document. This creates a seamless workflow where your analysis code, results, visualizations, and explanatory text all live in a single document.</p>
+                
+                <p>RMarkdown documents are fully reproducible and support dozens of output formats including HTML, PDF, MS Word, slides, and more. This makes RMarkdown an excellent tool for:</p>
+                
+                <ul>
+                    <li><strong>Scientific documentation</strong> - Create detailed analysis reports with embedded code and results</li>
+                    <li><strong>Presentations</strong> - Build slides that include live code and visualizations</li>
+                    <li><strong>Websites</strong> - Generate static websites or blogs to share your research</li>
+                    <li><strong>Books</strong> - Author technical books with integrated code examples</li>
+                    <li><strong>Dashboards</strong> - Create interactive dashboards for data exploration</li>
+                </ul>
+                
+                <p>For microbiome analysis with QIIME2, RMarkdown provides an ideal environment to document your analysis pipeline, visualize results, and create publication-ready figures.</p>
+            </section>
+            
+            <section>
+                <h2>Why Use RMarkdown with QIIME2?</h2>
+                
+                <p>While QIIME2 provides its own visualization tools and artifacts, RMarkdown offers several advantages for microbiome researchers:</p>
+                
+                <ul>
+                    <li><strong>Integration with R's statistical ecosystem</strong> - Access powerful packages like phyloseq, vegan, and DESeq2 for advanced statistical analysis</li>
+                    <li><strong>Customizable visualizations</strong> - Create publication-quality plots using ggplot2 that go beyond QIIME2's built-in visualizations</li>
+                    <li><strong>Reproducible workflows</strong> - Document your entire analysis pipeline from raw data to final conclusions in a single file</li>
+                    <li><strong>Version control</strong> - Track changes to your analysis over time using Git</li>
+                    <li><strong>Collaboration</strong> - Share your complete analysis with colleagues who can reproduce your exact results</li>
+                </ul>
+                
+                <p>By combining QIIME2 with RMarkdown, you get the best of both worlds: QIIME2's robust microbiome analysis tools and R's flexible statistical and visualization capabilities.</p>
+            </section>
+            
+            <section>
+                <h2>Basic RMarkdown Structure</h2>
+                
+                <p>An RMarkdown document consists of three main components:</p>
+                
+                <h3>1. YAML Header</h3>
+                <p>The YAML header appears at the top of the document between triple-dashes and contains metadata about your document, including the title, author, date, and output format.</p>
+                
+                <div class="code-block">
+                    <pre><code>---
+title: "QIIME2 Microbiome Analysis"
+author: "Your Name"
+date: "June 2, 2025"
+output: html_document
+---</code></pre>
+                </div>
+                
+                <h3>2. Text Content (Markdown)</h3>
+                <p>The main body of your document is written in Markdown, a lightweight markup language that's easy to read and write. Markdown allows you to format text with headers, lists, links, images, and more.</p>
+                
+                <div class="code-block">
+                    <pre><code># Main Header
+
+## Subheader
+
+This is a paragraph with **bold text** and *italic text*.
+
+- Bullet point 1
+- Bullet point 2
+  - Nested bullet point
+
+1. Numbered item 1
+2. Numbered item 2
+
+[Link to QIIME2 website](https://qiime2.org)</code></pre>
+                </div>
+                
+                <h3>3. Code Chunks</h3>
+                <p>Code chunks are sections of R code that can be executed within your document. They are enclosed in triple backticks with {r} to indicate that the code is R. You can also add chunk options to control how the code is executed and displayed.</p>
+                
+                <div class="code-block">
+                    <pre><code>```{r load-libraries}
+library(tidyverse)
+library(qiime2R)
+library(phyloseq)
+```
+
+```{r load-data, message=FALSE}
+# Import QIIME2 artifacts into R
+physeq <- qza_to_phyloseq(
+  features = "table.qza",
+  tree = "rooted-tree.qza",
+  taxonomy = "taxonomy.qza",
+  metadata = "metadata.tsv"
+)
+```
+
+```{r alpha-diversity, fig.width=8, fig.height=6}
+# Calculate and plot alpha diversity
+plot_richness(physeq, x="SampleType", measures=c("Shannon", "Simpson"))
+```</code></pre>
+                </div>
+            </section>
+            
+            <section>
+                <h2>Creating Your First RMarkdown Document for QIIME2 Analysis</h2>
+                
+                <h3>Step 1: Install Required Software</h3>
+                <p>Before you begin, make sure you have the following software installed:</p>
+                <ul>
+                    <li>R (https://www.r-project.org/)</li>
+                    <li>RStudio (https://www.rstudio.com/products/rstudio/download/)</li>
+                    <li>QIIME2 (https://qiime2.org/)</li>
+                    <li>Required R packages: rmarkdown, knitr, tidyverse, qiime2R, phyloseq</li>
+                </ul>
+                
+                <p>You can install the required R packages with the following code:</p>
+                
+                <div class="code-block">
+                    <pre><code>install.packages(c("rmarkdown", "knitr", "tidyverse"))
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("phyloseq")
+devtools::install_github("jbisanz/qiime2R")</code></pre>
+                </div>
+                
+                <h3>Step 2: Create a New RMarkdown Document</h3>
+                <p>In RStudio, go to File > New File > R Markdown. Fill in the title, author, and select HTML as the output format. This will create a template RMarkdown document with some example code.</p>
+                
+                <h3>Step 3: Set Up Your QIIME2 Analysis Workflow</h3>
+                <p>Replace the template content with your own QIIME2 analysis workflow. Here's an example structure:</p>
+                
+                <div class="code-block">
+                    <pre><code>---
+title: "QIIME2 Microbiome Analysis"
+author: "Your Name"
+date: "June 2, 2025"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: united
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(qiime2R)
+library(phyloseq)
+library(ggplot2)
+library(vegan)
+```
+
+## Introduction
+
+Brief description of your study and research questions.
+
+## Data Import
+
+```{r import-data}
+# Import QIIME2 artifacts
+physeq <- qza_to_phyloseq(
+  features = "table.qza",
+  tree = "rooted-tree.qza",
+  taxonomy = "taxonomy.qza",
+  metadata = "metadata.tsv"
+)
+
+# Examine the data
+physeq
+```
+
+## Sample Composition
+
+```{r sample-composition, fig.width=10, fig.height=6}
+# Plot relative abundance of top 10 taxa
+top10 <- names(sort(taxa_sums(physeq), decreasing=TRUE))[1:10]
+ps.top10 <- transform_sample_counts(physeq, function(OTU) OTU/sum(OTU))
+ps.top10 <- prune_taxa(top10, ps.top10)
+plot_bar(ps.top10, x="SampleID", fill="Phylum") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Alpha Diversity Analysis
+
+```{r alpha-diversity, fig.width=8, fig.height=6}
+# Calculate and plot alpha diversity
+plot_richness(physeq, x="SampleType", measures=c("Shannon", "Simpson")) + 
+  geom_boxplot()
+```
+
+## Beta Diversity Analysis
+
+```{r beta-diversity, fig.width=8, fig.height=6}
+# Ordination plot
+ord <- ordinate(physeq, "NMDS", "bray")
+plot_ordination(physeq, ord, color="SampleType") + 
+  geom_point(size=3)
+```
+
+## Statistical Testing
+
+```{r statistics}
+# PERMANOVA test
+metadata <- sample_data(physeq)
+dist_matrix <- phyloseq::distance(physeq, method="bray")
+adonis2(dist_matrix ~ SampleType, data=metadata)
+```
+
+## Conclusions
+
+Summary of key findings and next steps.</code></pre>
+                </div>
+                
+                <h3>Step 4: Knit Your Document</h3>
+                <p>Click the "Knit" button in RStudio to render your document. This will execute all the R code chunks and create an HTML document with your analysis results.</p>
+            </section>
+            
+            <section>
+                <h2>Advanced RMarkdown Features for QIIME2 Analysis</h2>
+                
+                <h3>Interactive Visualizations</h3>
+                <p>You can create interactive visualizations using packages like plotly:</p>
+                
+                <div class="code-block">
+                    <pre><code>```{r interactive-plot, fig.width=8, fig.height=6}
+library(plotly)
+p <- plot_ordination(physeq, ord, color="SampleType") + 
+  geom_point(size=3)
+ggplotly(p)
+```</code></pre>
+                </div>
+                
+                <h3>Parameterized Reports</h3>
+                <p>Create reports that can be run with different parameters:</p>
+                
+                <div class="code-block">
+                    <pre><code>---
+title: "QIIME2 Analysis"
+params:
+  metadata_file: "metadata.tsv"
+  sample_type: "Gut"
+---
+
+```{r}
+# Filter data based on parameter
+subset_data <- subset_samples(physeq, SampleType == params$sample_type)
+```</code></pre>
+                </div>
+                
+                <h3>Creating Presentations</h3>
+                <p>RMarkdown can generate slide presentations using various formats:</p>
+                
+                <div class="code-block">
+                    <pre><code>---
+title: "QIIME2 Analysis Results"
+author: "Your Name"
+date: "June 2, 2025"
+output: 
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+---
+
+## Introduction
+
+- Background information
+- Research questions
+
+## Methods
+
+```{r, echo=FALSE}
+# Code to generate methods figure
+```
+
+## Results
+
+```{r, echo=FALSE}
+# Code to generate results
+```</code></pre>
+                </div>
+            </section>
+            
+            <section>
+                <h2>Best Practices for Scientific Documentation</h2>
+                
+                <ul>
+                    <li><strong>Document your workflow thoroughly</strong> - Include all steps from raw data processing to final analysis</li>
+                    <li><strong>Use meaningful chunk names</strong> - Name your code chunks to make debugging easier</li>
+                    <li><strong>Set global chunk options</strong> - Use `knitr::opts_chunk$set()` to set default options for all chunks</li>
+                    <li><strong>Cache computationally intensive chunks</strong> - Add `cache=TRUE` to avoid re-running time-consuming analyses</li>
+                    <li><strong>Include session information</strong> - Add `sessionInfo()` at the end of your document to record package versions</li>
+                    <li><strong>Use relative file paths</strong> - Make your analysis portable by using relative paths</li>
+                    <li><strong>Version control your documents</strong> - Use Git to track changes to your analysis over time</li>
+                </ul>
+                
+                <div class="code-block">
+                    <pre><code>```{r session-info}
+sessionInfo()
+```</code></pre>
+                </div>
+            </section>
+            
+            <section>
+                <h2>Resources for Learning More</h2>
+                
+                <ul>
+                    <li><a href="https://rmarkdown.rstudio.com/" target="_blank">RMarkdown Official Documentation</a></li>
+                    <li><a href="https://bookdown.org/yihui/rmarkdown/" target="_blank">R Markdown: The Definitive Guide</a></li>
+                    <li><a href="https://github.com/jbisanz/qiime2R" target="_blank">qiime2R Package Documentation</a></li>
+                    <li><a href="https://joey711.github.io/phyloseq/" target="_blank">phyloseq Package Documentation</a></li>
+                    <li><a href="https://r4ds.had.co.nz/" target="_blank">R for Data Science</a></li>
+                </ul>
+            </section>
+            
+            <a href="q2-workshop.html" class="back-link">← Back to Workshop Materials</a>
+        </div>
+    </div>
+</body>
+</html>

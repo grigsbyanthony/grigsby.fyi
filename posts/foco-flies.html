@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOCO Flies | grigsby.fyi</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="../assets/images/favicons/site.webmanifest">
+    <link rel="shortcut icon" href="../assets/images/favicons/favicon.ico">
+    <style>
+        /* Import custom fonts from parent directory */
+        @font-face {
+            font-family: 'Computer Modern Serif';
+            src: url('../assets/fonts/cmunsi.ttf') format('truetype');
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Serif';
+            src: url('../assets/fonts/cmunso.ttf') format('truetype');
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Sans';
+            src: url('../assets/fonts/cmunss.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Sans';
+            src: url('../assets/fonts/cmunsx.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+        
+        :root {
+            --primary-color: #333333;
+            --secondary-color: #555555;
+            --accent-color: #777777;
+            --text-color: #333333;
+            --serif-font: 'Computer Modern Serif', Georgia, serif;
+            --sans-font: 'Computer Modern Sans', Arial, sans-serif;
+        }
+        
+        body {
+            font-family: var(--sans-font);
+            line-height: 1.6;
+            margin: 0;
+            
+        /* Image Gallery Styles */
+        .intro-layout {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .intro-left {
+            flex: 1;
+            padding-right: 15px;
+        }
+        
+        .intro-right {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        .intro-text {
+            width: 100%;
+        }
+        
+        .image-gallery {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .gallery-tall {
+            max-width: 400px;
+            height: 520px; /* Tall gallery */
+        }
+        
+        .gallery-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .gallery-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform 0.8s ease, opacity 0.8s ease;
+        }
+        
+        .gallery-image.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .gallery-image.previous {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* Responsive styles for the intro section */
+        @media (max-width: 768px) {
+            .intro-layout {
+                flex-direction: column;
+            }
+            
+            .intro-left, .intro-right {
+                width: 100%;
+            }
+            
+            .intro-left {
+                padding-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .gallery-tall {
+                height: 300px;
+                max-width: 100%;
+            }
+        }
+            padding: 0;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        
+        .post-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .post-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .post-title {
+            font-family: var(--sans-font);
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .post-meta {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+        
+        .post-tag {
+            background-color: var(--light-gray);
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .post-content {
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        
+        .post-content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+        }
+        
+        .post-content ul, 
+        .post-content ol {
+            margin-bottom: 20px;
+            margin-left: 20px;
+        }
+        
+        .post-content li {
+            margin-bottom: 8px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid var(--primary-color);
+        }
+        
+        .back-link:hover {
+            opacity: 0.8;
+        }
+        
+        .post-footer {
+            margin-top: 60px;
+            text-align: center;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .fly-metadata {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        
+        .fly-metadata th,
+        .fly-metadata td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        .fly-metadata th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+        
+        .fly-metadata tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .table-note {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        /* Gallery styles */
+        .fly-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border: 1px solid #ddd;
+            overflow: hidden;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .sample-number {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        
+        .gallery-toggle, .toggle-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: var(--sans-font);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .gallery-toggle:hover, .toggle-button:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .visualization-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        
+        .chart-wrapper {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+        }
+        
+        .info-callout {
+            display: flex;
+            background-color: #e8f4f8;
+            border-left: 4px solid #4a90e2;
+            padding: 12px 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+            align-items: flex-start;
+        }
+        
+        .callout-icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .callout-content {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .home-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        
+        .home-link a {
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-family: var(--sans-font);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 8px 12px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .home-link a:hover {
+            background-color: #e8e8e8;
+        }
+    </style>
+</head>
+<body>
+    <div class="home-link">
+        <a href="../index.html">← Return Home</a>
+    </div>
+    <div class="post-container">
+        <header class="post-header">
+            <h1 class="post-title">Survey of Urban Filth Flies in FOCO</h1>
+            <div class="post-meta">May 30, 2025</div>
+            <div class="post-tags">
+                <span class="post-tag">research</span>
+                <span class="post-tag">entomology</span>
+                <span class="post-tag">urban ecology</span>
+                <span class="post-tag">home science</span>
+            </div>
+        </header>
+        
+        <div class="post-content">
+            <div class="info-callout">
+                <div class="callout-icon">ℹ️</div>
+                <div class="callout-content">
+                    <strong>Last Updated:</strong> June 2, 2025 — Updated metadata table with temperature and humidity data for all 100 samples and expanded the fly gallery to include all 60 specimen images.
+                </div>
+            </div>
+            
+            <div class="visualization-container">
+                <div class="chart-wrapper">
+                    <canvas id="speciesChart"></canvas>
+                </div>
+            </div>
+            
+            <section>
+                <h2>Introduction</h2>
+                <div class="intro-layout">
+                    <div class="intro-left">
+                        <div class="intro-text">
+                            <p>This is a small project I took on to get a better understanding of the local Dipteran fauna I might find in later studies that necessitate their collection.</p>
+                            <p>I was curious to see how much success could be had simply trapping flies with simple scented bait and disposable carton and net traps, and I was pleasantly surprised by the turnout. The diversity we've seen so far hasn't been anything spectacular, but there's a lot of strength in knowing what will or won't show up during the summer.</p>
+                            <p>I've provided the metadata for the flies I've hand-collected and processed, as well as images of the first 60.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="intro-right">
+                        <div class="image-gallery gallery-tall">
+                            <div class="gallery-container">
+                                <img src="../assets/images/flies/rotation/1.jpg" alt="Fly image 1" class="gallery-image gallery-tall-image active">
+                                <img src="../assets/images/flies/rotation/2.jpg" alt="Fly image 2" class="gallery-image gallery-tall-image">
+                                <img src="../assets/images/flies/rotation/3.jpg" alt="Fly image 3" class="gallery-image gallery-tall-image">
+                                <img src="../assets/images/flies/rotation/4.jpg" alt="Fly image 4" class="gallery-image gallery-tall-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section>
+                <h2>Fly Metadata</h2>
+                <p>The following table presents the metadata for the flies collected around Colorado State University's main campus in Fort Collins, CO:</p>
+                
+                <button id="metadata-toggle" class="toggle-button">Show Metadata Table</button>
+                
+                <div id="metadata-container" class="table-container" style="display: none;">
+                    <table class="fly-metadata">
+                        <thead>
+                            <tr>
+                                <th>Sample #</th>
+                                <th>Date Collected</th>
+                                <th>Location</th>
+                                <th>Trap Type</th>
+                                <th>Species</th>
+                                <th>Common Name</th>
+                                <th>Temperature (°C)</th>
+                                <th>Humidity (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2025-05-31</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Fannia sp.</td>
+                                <td></td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>2025-05-31</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Protophormia terraenovae</td>
+                                <td>Blue-bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>2025-05-31</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Hydrotaea sp.</td>
+                                <td></td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>2025-05-31</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Pollenia sp.</td>
+                                <td></td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>2025-05-31</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Phormia regina</td>
+                                <td>Black blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>14</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>15</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>16</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>17</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>18</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>19</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>20</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>21</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>22</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>23</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>24</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>25</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>26</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>27</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>28</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>29</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>30</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>31</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>32</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>33</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>34</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>35</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Phormia regina</td>
+                                <td>Black blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>36</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>37</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>38</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>39</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>40</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Phormia regina</td>
+                                <td>Black blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>41</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>42</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>43</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>44</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Phormia regina</td>
+                                <td>Black blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>45</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>46</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>47</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>48</td>
+                                <td>2025-05-31</td>
+                                <td>Near dumpsters</td>
+                                <td>Baited net trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>22</td>
+                                <td>43</td>
+                            </tr>
+                            <tr>
+                                <td>49</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>50</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>51</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>52</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>53</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>54</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>55</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>56</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>57</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>58</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>59</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>60</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>61</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>62</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Cynomya cadaverina</td>
+                                <td>Shiny new bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>63</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>64</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>65</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>66</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>67</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>68</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>69</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>70</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>71</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>72</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>73</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>74</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>75</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>76</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>77</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>78</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>79</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>80</td>
+                                <td>2025-06-02</td>
+                                <td>Near carrion (bird)</td>
+                                <td>Lidded bait trap</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>27</td>
+                                <td>47</td>
+                            </tr>
+                            <tr>
+                                <td>81</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>82</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>83</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>84</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Phormia regina</td>
+                                <td>Black blow fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>85</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>86</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>87</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>88</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>89</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>90</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>91</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>92</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Cynomya cadaverina</td>
+                                <td>Shiny new bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>93</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>94</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>95</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Phormia regina</td>
+                                <td>Black blow fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>96</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>97</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>98</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>99</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Lucilia sericata</td>
+                                <td>Common green bottle fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>100</td>
+                                <td>2025-06-02</td>
+                                <td>Urban park</td>
+                                <td>Sweep net</td>
+                                <td>Calliphora vicina</td>
+                                <td>Blue blow fly</td>
+                                <td>28</td>
+                                <td>45</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+
+            
+            <section>
+                <h2>Fly Gallery</h2>
+                <p>Below are images of the flies collected during this survey. Each image is labeled with its sample number.</p>
+                
+                <div class="fly-gallery" id="initial-gallery">
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/1.JPG" alt="Fly Sample 1">
+                        <div class="sample-number">Sample #1</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/2.JPG" alt="Fly Sample 2">
+                        <div class="sample-number">Sample #2</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/3.JPG" alt="Fly Sample 3">
+                        <div class="sample-number">Sample #3</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/4.JPG" alt="Fly Sample 4">
+                        <div class="sample-number">Sample #4</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/5.JPG" alt="Fly Sample 5">
+                        <div class="sample-number">Sample #5</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/6.JPG" alt="Fly Sample 6">
+                        <div class="sample-number">Sample #6</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/7.JPG" alt="Fly Sample 7">
+                        <div class="sample-number">Sample #7</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/8.JPG" alt="Fly Sample 8">
+                        <div class="sample-number">Sample #8</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/9.JPG" alt="Fly Sample 9">
+                        <div class="sample-number">Sample #9</div>
+                    </div>
+                </div>
+                
+                <button id="gallery-toggle" class="gallery-toggle">Show More Samples</button>
+                
+                <div class="fly-gallery" id="expanded-gallery" style="display: none;">
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/10.JPG" alt="Fly Sample 10">
+                        <div class="sample-number">Sample #10</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/11.JPG" alt="Fly Sample 11">
+                        <div class="sample-number">Sample #11</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/12.JPG" alt="Fly Sample 12">
+                        <div class="sample-number">Sample #12</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/13.JPG" alt="Fly Sample 13">
+                        <div class="sample-number">Sample #13</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/14.JPG" alt="Fly Sample 14">
+                        <div class="sample-number">Sample #14</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/15.JPG" alt="Fly Sample 15">
+                        <div class="sample-number">Sample #15</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/16.JPG" alt="Fly Sample 16">
+                        <div class="sample-number">Sample #16</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/17.JPG" alt="Fly Sample 17">
+                        <div class="sample-number">Sample #17</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/18.JPG" alt="Fly Sample 18">
+                        <div class="sample-number">Sample #18</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/19.JPG" alt="Fly Sample 19">
+                        <div class="sample-number">Sample #19</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/20.JPG" alt="Fly Sample 20">
+                        <div class="sample-number">Sample #20</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/21.JPG" alt="Fly Sample 21">
+                        <div class="sample-number">Sample #21</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/22.JPG" alt="Fly Sample 22">
+                        <div class="sample-number">Sample #22</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/23.JPG" alt="Fly Sample 23">
+                        <div class="sample-number">Sample #23</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/24.JPG" alt="Fly Sample 24">
+                        <div class="sample-number">Sample #24</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/25.JPG" alt="Fly Sample 25">
+                        <div class="sample-number">Sample #25</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/26.JPG" alt="Fly Sample 26">
+                        <div class="sample-number">Sample #26</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/27.JPG" alt="Fly Sample 27">
+                        <div class="sample-number">Sample #27</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/28.JPG" alt="Fly Sample 28">
+                        <div class="sample-number">Sample #28</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/29.JPG" alt="Fly Sample 29">
+                        <div class="sample-number">Sample #29</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/30.JPG" alt="Fly Sample 30">
+                        <div class="sample-number">Sample #30</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/31.JPG" alt="Fly Sample 31">
+                        <div class="sample-number">Sample #31</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/32.JPG" alt="Fly Sample 32">
+                        <div class="sample-number">Sample #32</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/33.JPG" alt="Fly Sample 33">
+                        <div class="sample-number">Sample #33</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/34.JPG" alt="Fly Sample 34">
+                        <div class="sample-number">Sample #34</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/35.JPG" alt="Fly Sample 35">
+                        <div class="sample-number">Sample #35</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/36.JPG" alt="Fly Sample 36">
+                        <div class="sample-number">Sample #36</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/37.JPG" alt="Fly Sample 37">
+                        <div class="sample-number">Sample #37</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/38.JPG" alt="Fly Sample 38">
+                        <div class="sample-number">Sample #38</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/39.JPG" alt="Fly Sample 39">
+                        <div class="sample-number">Sample #39</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/40.JPG" alt="Fly Sample 40">
+                        <div class="sample-number">Sample #40</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/41.JPG" alt="Fly Sample 41">
+                        <div class="sample-number">Sample #41</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/42.JPG" alt="Fly Sample 42">
+                        <div class="sample-number">Sample #42</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/43.JPG" alt="Fly Sample 43">
+                        <div class="sample-number">Sample #43</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/44.JPG" alt="Fly Sample 44">
+                        <div class="sample-number">Sample #44</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/45.JPG" alt="Fly Sample 45">
+                        <div class="sample-number">Sample #45</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/46.JPG" alt="Fly Sample 46">
+                        <div class="sample-number">Sample #46</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/47.JPG" alt="Fly Sample 47">
+                        <div class="sample-number">Sample #47</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/48.JPG" alt="Fly Sample 48">
+                        <div class="sample-number">Sample #48</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/49.JPG" alt="Fly Sample 49">
+                        <div class="sample-number">Sample #49</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/50.JPG" alt="Fly Sample 50">
+                        <div class="sample-number">Sample #50</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/51.JPG" alt="Fly Sample 51">
+                        <div class="sample-number">Sample #51</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/52.JPG" alt="Fly Sample 52">
+                        <div class="sample-number">Sample #52</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/53.JPG" alt="Fly Sample 53">
+                        <div class="sample-number">Sample #53</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/54.JPG" alt="Fly Sample 54">
+                        <div class="sample-number">Sample #54</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/55.JPG" alt="Fly Sample 55">
+                        <div class="sample-number">Sample #55</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/56.JPG" alt="Fly Sample 56">
+                        <div class="sample-number">Sample #56</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/57.JPG" alt="Fly Sample 57">
+                        <div class="sample-number">Sample #57</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/58.JPG" alt="Fly Sample 58">
+                        <div class="sample-number">Sample #58</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/59.JPG" alt="Fly Sample 59">
+                        <div class="sample-number">Sample #59</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../assets/images/flies/60.JPG" alt="Fly Sample 60">
+                        <div class="sample-number">Sample #60</div>
+                    </div>
+                </div>
+            </section>
+            
+            <a href="../index.html" class="back-link">← Back to Home</a>
+        </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Image Gallery Rotation
+                initializeImageGallery();
+                
+                // Gallery toggle functionality
+                const galleryToggle = document.getElementById('gallery-toggle');
+                const expandedGallery = document.getElementById('expanded-gallery');
+                
+                galleryToggle.addEventListener('click', function() {
+                    if (expandedGallery.style.display === 'none') {
+                        expandedGallery.style.display = 'grid';
+                        galleryToggle.textContent = 'Show Fewer Samples';
+                    } else {
+                        expandedGallery.style.display = 'none';
+                        galleryToggle.textContent = 'Show More Samples';
+                    }
+                });
+                
+                // Metadata table toggle functionality
+                const metadataToggle = document.getElementById('metadata-toggle');
+                const metadataContainer = document.getElementById('metadata-container');
+                
+                metadataToggle.addEventListener('click', function() {
+                    if (metadataContainer.style.display === 'none') {
+                        metadataContainer.style.display = 'block';
+                        metadataToggle.textContent = 'Hide Metadata Table';
+                    } else {
+                        metadataContainer.style.display = 'none';
+                        metadataToggle.textContent = 'Show Metadata Table';
+                    }
+                });
+                
+                // Data for charts
+                const flyData = [
+                    { species: 'Lucilia sericata', count: 48, commonName: 'Common green bottle fly' },
+                    { species: 'Calliphora vicina', count: 43, commonName: 'Blue blow fly' },
+                    { species: 'Phormia regina', count: 5, commonName: 'Black blow fly' },
+                    { species: 'Fannia sp.', count: 1, commonName: 'Lesser house fly' },
+                    { species: 'Protophormia terraenovae', count: 1, commonName: 'Blue-bottle fly' },
+                    { species: 'Hydrotaea sp.', count: 1, commonName: 'Root-maggot fly' },
+                    { species: 'Pollenia sp.', count: 1, commonName: 'Cluster fly' },
+                    { species: 'Cynomya cadaverina', count: 1, commonName: 'Shiny new bottle fly' }
+                ];
+                
+                // Image Gallery Function
+                function initializeImageGallery() {
+                    // Initialize tall gallery
+                    initializeGallery('.gallery-tall-image', 5000); // 5 seconds transition
+                }
+                
+                function initializeGallery(selector, interval) {
+                    const galleryImages = document.querySelectorAll(selector);
+                    if (galleryImages.length === 0) return;
+                    
+                    let currentIndex = 0;
+                    const totalImages = galleryImages.length;
+                    
+                    // Set initial active image
+                    galleryImages[currentIndex].classList.add('active');
+                    
+                    // Function to transition to the next image
+                    function nextImage() {
+                        // Add 'previous' class to the current active image
+                        galleryImages[currentIndex].classList.add('previous');
+                        galleryImages[currentIndex].classList.remove('active');
+                        
+                        // Calculate next index
+                        currentIndex = (currentIndex + 1) % totalImages;
+                        
+                        // Add 'active' class to the next image
+                        galleryImages[currentIndex].classList.add('active');
+                        
+                        // Remove 'previous' class from all other images after transition
+                        setTimeout(() => {
+                            galleryImages.forEach((img, idx) => {
+                                if (idx !== currentIndex) {
+                                    img.classList.remove('previous');
+                                }
+                            });
+                        }, 800); // Match this to the CSS transition duration
+                    }
+                    
+                    // Set interval for automatic transitions
+                    setInterval(nextImage, interval);
+                }
+                
+                // Create species distribution chart
+                const speciesCtx = document.getElementById('speciesChart').getContext('2d');
+                new Chart(speciesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: flyData.map(d => d.species),
+                        datasets: [{
+                            label: 'Number of Specimens',
+                            data: flyData.map(d => d.count),
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(153, 102, 255, 0.7)',
+                                'rgba(255, 159, 64, 0.7)',
+                                'rgba(255, 99, 132, 0.7)',
+                                'rgba(255, 206, 86, 0.7)',
+                                'rgba(201, 203, 207, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(201, 203, 207, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Species Distribution',
+                                font: {
+                                    size: 16,
+                                    family: "'Computer Modern Sans', Arial, sans-serif"
+                                }
+                            },
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    afterLabel: function(context) {
+                                        const index = context.dataIndex;
+                                        const commonName = flyData[index].commonName;
+                                        return commonName ? `Common name: ${commonName}` : '';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Specimens'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Species'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
+        
+        <footer class="post-footer">
+            <p>&copy; <span id="current-year"></span> grigsby.fyi. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

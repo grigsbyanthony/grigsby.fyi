@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Metagenomic Analysis of Soil Microbiomes",
+    "file": "metagenomic_analysis.pdf",
+    "date": "2024-03-15",
+    "venue": "International Conference on Computational Biology, Boston, MA",
+    "description": "A presentation on novel computational approaches to analyzing soil microbiome data."
+  },
+  {
+    "title": "Machine Learning for Protein Structure Prediction",
+    "file": "ml_protein_structure.pdf",
+    "date": "2023-11-10",
+    "venue": "AI in Bioinformatics Workshop, Stanford University",
+    "description": "Overview of recent advances in using deep learning for protein structure prediction."
+  },
+  {
+    "title": "Genomic Data Visualization Techniques",
+    "file": "genomic_visualization.pdf",
+    "date": "2023-09-22",
+    "venue": "BioVis Symposium, University of Washington",
+    "description": "Exploring effective methods for visualizing complex genomic datasets."
+  }
+]

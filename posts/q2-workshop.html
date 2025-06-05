@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QIIME2 2025 Workshop | grigsby.fyi</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="../assets/images/favicons/site.webmanifest">
+    <link rel="shortcut icon" href="../assets/images/favicons/favicon.ico">
+    <style>
+        /* Import custom fonts from parent directory */
+        @font-face {
+            font-family: 'Computer Modern Serif';
+            src: url('../assets/fonts/cmunsi.ttf') format('truetype');
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Serif';
+            src: url('../assets/fonts/cmunso.ttf') format('truetype');
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Sans';
+            src: url('../assets/fonts/cmunss.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Computer Modern Sans';
+            src: url('../assets/fonts/cmunsx.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+        
+        :root {
+            --primary-color: #333333;
+            --secondary-color: #555555;
+            --accent-color: #777777;
+            --text-color: #333333;
+            --serif-font: 'Computer Modern Serif', Georgia, serif;
+            --sans-font: 'Computer Modern Sans', Arial, sans-serif;
+        }
+        
+        body {
+            font-family: var(--sans-font);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+        }
+        
+        .post-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .post-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            margin-bottom: 20px;
+        }
+        
+        .logo-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .post-title {
+            font-family: var(--sans-font);
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .post-meta {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .post-tag {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .post-content {
+            font-family: var(--serif-font);
+        }
+        
+        .post-content h2 {
+            font-family: var(--sans-font);
+            color: var(--primary-color);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .post-content p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .info-callout {
+            display: flex;
+            background-color: #e8f4f8;
+            border-left: 4px solid #4a90e2;
+            padding: 12px 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+            align-items: flex-start;
+        }
+        
+        .callout-icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .callout-content {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .github-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0 30px;
+            padding: 15px;
+            background-color: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #24292e;
+            font-family: var(--sans-font);
+            transition: background-color 0.2s;
+        }
+        
+        .github-link:hover {
+            background-color: #ebeef1;
+        }
+        
+        .github-icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .search-workshop {
+            margin: 20px 0;
+            width: 100%;
+        }
+        
+        #workshop-search {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: var(--sans-font);
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        
+        .workshop-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-family: var(--sans-font);
+        }
+        
+        .workshop-table th {
+            background-color: #f6f8fa;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+            font-weight: bold;
+        }
+        
+        .workshop-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .workshop-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .workshop-table a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+        
+        .workshop-table a:hover {
+            text-decoration: underline;
+        }
+        
+        .tag-pill {
+            display: inline-block;
+            background-color: #e8f4f8;
+            color: #4a90e2;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+            display: none;
+        }
+        
+        .home-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        
+        .home-link a {
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-family: var(--sans-font);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 8px 12px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .home-link a:hover {
+            background-color: #e8e8e8;
+        }
+        
+        .workshop-header {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            background-color: #24292e;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .github-link:hover {
+            background-color: #3a3f45;
+        }
+        
+        .github-button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin: 30px 0;
+        }
+        
+        .github-icon {
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .workshop-flier {
+            margin-left: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .workshop-flier-corner {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        
+        .flier-image-corner {
+            width: 100px;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: rotate(5deg);
+            opacity: 0.6;
+            transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .flier-image-corner:hover {
+            transform: rotate(0deg) scale(1.05);
+            opacity: 1;
+            width: 120px;
+        }
+        
+        .flier-expanded {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(0deg) scale(1);
+            width: 80%;
+            max-width: 600px;
+            height: auto;
+            z-index: 1000;
+            opacity: 1;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: expand-flier 0.4s ease-out;
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        @keyframes expand-flier {
+            0% {
+                transform: translate(-50%, -50%) rotate(5deg) scale(0.2);
+            }
+            50% {
+                transform: translate(-50%, -50%) rotate(0deg) scale(1.1);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(0deg) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="home-link">
+        <a href="../index.html">← Return Home</a>
+    </div>
+    <div class="workshop-flier-corner" id="flier-container">
+        <img src="../assets/images/microbiome-workshop-flier.png" alt="Microbiome Workshop Flier" class="flier-image-corner" id="flier-image">
+    </div>
+    <div class="overlay" id="flier-overlay"></div>
+    <div class="post-container">
+        <header class="post-header">
+            <h1 class="post-title">QIIME2 2025 Workshop</h1>
+            <div class="post-meta">May 25, 2025</div>
+            <div class="post-tags">
+                <span class="post-tag">workshop</span>
+                <span class="post-tag">qiime2</span>
+                <span class="post-tag">tutorial</span>
+            </div>
+        </header>
+        
+        <div class="post-content">
+            <div class="info-callout">
+                <div class="callout-icon">ℹ️</div>
+                <div class="callout-content">
+                    <strong>Last Updated:</strong> June 5, 2025 — Added new RMarkdown reference for download.
+                </div>
+            </div>
+            
+            <div class="github-button-container">
+                <a href="https://github.com/grigsbyanthony/metcalf-q2-workshop/tree/main/2025" class="github-link" target="_blank">
+                    <span class="github-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </span>
+                    View Workshop Materials on GitHub
+                </a><a href="metadata-validator.html" class="github-link" style="background-color: #4a90e2;">
+                    <span class="github-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                    </span>
+                    Validate your metadata here!
+                </a>
+            </div>
+            
+            <section>
+                <h2>Workshop Materials</h2>
+                <p>This page contains all materials for the QIIME2 2025 Workshop hosted by the Metcalf Lab at Colorado State University. Use the search box below to filter content by title, description, or tags.</p>
+                
+                <div class="search-workshop">
+                    <input type="text" id="workshop-search" placeholder="Search workshop materials...">
+                </div>
+                
+                <div id="no-results" class="no-results">No matching workshop materials found</div>
+                
+                <table class="workshop-table" id="workshop-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Tags</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="https://docs.google.com/presentation/d/1fxr-uGRXWYQEB_otbWBYGNPSDGmExgkNtvQCfPzFzyw/edit?slide=id.g2e53a2f3c66_20_19" target="_blank">2025 QIIME2 Workshop</a></td>
+                            <td>Main workshop presentation with comprehensive coverage of QIIME2 analysis</td>
+                            <td>Presentation</td>
+                            <td>
+                                <span class="tag-pill">workshop</span>
+                                <span class="tag-pill">comprehensive</span>
+                                <span class="tag-pill">slides</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="rmarkdown-intro.html">Introduction to RMarkdown</a></td>
+                            <td>Learn how to use RMarkdown for scientific documentation and presentation of QIIME2 analyses</td>
+                            <td>Tutorial</td>
+                            <td>
+                                <span class="tag-pill">documentation</span>
+                                <span class="tag-pill">R</span>
+                                <span class="tag-pill">reproducibility</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="Qiime2 Pre-workshop Linux Intro.pdf" download>Qiime2 Pre-workshop Linux Intro</a></td>
+                            <td>Essential Linux commands and concepts for working with QIIME2</td>
+                            <td>Presentation</td>
+                            <td>
+                                <span class="tag-pill">linux</span>
+                                <span class="tag-pill">command-line</span>
+                                <span class="tag-pill">prerequisites</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="metadata-validator.html">QIIME2 Metadata File Validator</a></td>
+                            <td>Upload and validate your TSV metadata files for QIIME2 compatibility</td>
+                            <td>Tool</td>
+                            <td>
+                                <span class="tag-pill">metadata</span>
+                                <span class="tag-pill">validation</span>
+                                <span class="tag-pill">interactive</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="rmarkdown-reference.html" download>RMarkdown Reference</a></td>
+                            <td>A comprehensive reference guide for RMarkdown.</td>
+                            <td>Reference</td>
+                            <td>
+                                <span class="tag-pill">rmarkdown</span>
+                                <span class="tag-pill">reference</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('workshop-search');
+            const tableRows = document.querySelectorAll('#workshop-table tbody tr');
+            const noResults = document.getElementById('no-results');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                let hasResults = false;
+                
+                tableRows.forEach(row => {
+                    const title = row.querySelector('td:first-child').textContent.toLowerCase();
+                    const description = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                    const type = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                    const tags = row.querySelector('td:last-child').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm) || 
+                        type.includes(searchTerm) || tags.includes(searchTerm)) {
+                        row.style.display = '';
+                        hasResults = true;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                noResults.style.display = hasResults ? 'none' : 'block';
+            });
+            
+            const flierImage = document.getElementById('flier-image');
+            const overlay = document.getElementById('flier-overlay');
+            
+            flierImage.addEventListener('click', function() {
+                const expandedFlier = this.cloneNode(true);
+                expandedFlier.classList.remove('flier-image-corner');
+                expandedFlier.classList.add('flier-expanded');
+                expandedFlier.id = 'expanded-flier';
+                
+                overlay.classList.add('active');
+                overlay.appendChild(expandedFlier);
+                
+                overlay.addEventListener('click', closeExpandedFlier);
+                expandedFlier.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeExpandedFlier();
+                });
+                
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        closeExpandedFlier();
+                    }
+                });
+            });
+            
+            function closeExpandedFlier() {
+                const expandedFlier = document.getElementById('expanded-flier');
+                if (expandedFlier) {
+                    overlay.classList.remove('active');
+                    setTimeout(() => {
+                        if (expandedFlier.parentNode === overlay) {
+                            overlay.removeChild(expandedFlier);
+                        }
+                    }, 300);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
